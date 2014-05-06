@@ -23,10 +23,12 @@
 #define __CONFIG_PARALLELLA_ZED_H
 
 #define PHYS_SDRAM_1_SIZE (1024 * 1024 * 1024)
+#define CONFIG_SYS_SDRAM_SIZE PHYS_SDRAM_1_SIZE 
 #define CONFIG_SYS_MEM_TOP_HIDE 0x2000000
 
 #define CONFIG_ZYNQ_SERIAL_UART1
 #define CONFIG_PHY_ADDR	0
+#define CONFIG_ZYNQ_SDHCI1
 
 #define CONFIG_ZYNQ_GEM_OLD
 #define CONFIG_XGMAC_PHY_ADDR CONFIG_PHY_ADDR
@@ -40,14 +42,14 @@
 /*
  * I2C support
  */
-#define CONFIG_ZYNQ_I2C /* Support for Zynq I2C */
+#define CONFIG_ZYNQ_I2C0 /* Support for Zynq I2C */
 #define CONFIG_HARD_I2C /* I2C with hardware support */
 #define CONFIG_ZYNQ_I2C_CTLR_0 /* Enable I2C_0 */
 #define CONFIG_SYS_I2C_SPEED 400000 /* I2C speed and slave address */
 #define CONFIG_CMD_I2C
 #define CONFIG_SYS_I2C_ADDR 0x68
 
-#include <configs/zynq_common.h>
+#include <configs/zynq-common.h>
 
 #undef  SD_BASEADDR
 #define SD_BASEADDR    0xE0101000
