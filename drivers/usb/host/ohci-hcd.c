@@ -17,24 +17,7 @@
  * Modified for the MP2USB by (C) Copyright 2005 Eric Benard
  * ebenard@eukrea.com - based on s3c24x0's driver
  *
- * See file CREDITS for list of people who contributed to this
- * project.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
- * MA 02111-1307 USA
- *
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 /*
  * IMPORTANT NOTES
@@ -66,7 +49,6 @@
 
 #if defined(CONFIG_ARM920T) || \
     defined(CONFIG_S3C24X0) || \
-    defined(CONFIG_S3C6400) || \
     defined(CONFIG_440EP) || \
     defined(CONFIG_PCI_OHCI) || \
     defined(CONFIG_MPC5200) || \
@@ -803,7 +785,7 @@ static ed_t *ep_add_ed(struct usb_device *usb_dev, unsigned long pipe,
 			| (usb_pipeisoc(pipe)? 0x8000: 0)
 			| (usb_pipecontrol(pipe)? 0: \
 					   (usb_pipeout(pipe)? 0x800: 0x1000))
-			| usb_pipeslow(pipe) << 13
+			| (usb_dev->speed == USB_SPEED_LOW) << 13
 			| usb_maxpacket(usb_dev, pipe) << 16);
 
 	if (ed->type == PIPE_INTERRUPT && ed->state == ED_UNLINK) {
@@ -1566,7 +1548,7 @@ int submit_common_msg(struct usb_device *dev, unsigned long pipe, void *buffer,
 	}
 
 	dev->status = stat;
-	dev->act_len = transfer_len;
+	dev->act_len = urb->actual_length;
 
 #ifdef DEBUG
 	pkt_print(urb, dev, pipe, buffer, transfer_len,
@@ -1865,7 +1847,7 @@ static void hc_release_ohci(ohci_t *ohci)
  */
 static char ohci_inited = 0;
 
-int usb_lowlevel_init(void)
+int usb_lowlevel_init(int index, enum usb_init_type init, void **controller)
 {
 #ifdef CONFIG_PCI_OHCI
 	pci_dev_t pdev;
@@ -1879,7 +1861,7 @@ int usb_lowlevel_init(void)
 
 #ifdef CONFIG_SYS_USB_OHCI_BOARD_INIT
 	/*  board dependant init */
-	if (usb_board_init())
+	if (board_usb_init(index, USB_INIT_HOST))
 		return -1;
 #endif
 	memset(&gohci, 0, sizeof(ohci_t));
@@ -1936,7 +1918,7 @@ int usb_lowlevel_init(void)
 		err ("can't reset usb-%s", gohci.slot_name);
 #ifdef CONFIG_SYS_USB_OHCI_BOARD_INIT
 		/* board dependant cleanup */
-		usb_board_init_fail();
+		board_usb_cleanup(index, USB_INIT_HOST);
 #endif
 
 #ifdef CONFIG_SYS_USB_OHCI_CPU_INIT
@@ -1971,7 +1953,7 @@ int usb_lowlevel_init(void)
 	return 0;
 }
 
-int usb_lowlevel_stop(void)
+int usb_lowlevel_stop(int index)
 {
 	/* this gets called really early - before the controller has */
 	/* even been initialized! */

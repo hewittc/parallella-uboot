@@ -6,23 +6,7 @@
  *
  * Configuration settings for the TI OMAP3530 Beagle board.
  *
- * See file CREDITS for list of people who contributed to this
- * project.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
- * MA 02111-1307 USA
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #ifndef __CONFIG_H
@@ -35,6 +19,7 @@
 #define CONFIG_OMAP34XX		1	/* which is a 34XX */
 #define CONFIG_OMAP3_BEAGLE	1	/* working with BEAGLE */
 #define CONFIG_OMAP_GPIO
+#define CONFIG_OMAP_COMMON
 
 #define CONFIG_SDRC	/* The chip has SDRC controller */
 
@@ -53,7 +38,8 @@
 
 #define CONFIG_MISC_INIT_R
 
-#define CONFIG_OF_LIBFDT		1
+#define CONFIG_OF_LIBFDT
+#define CONFIG_CMD_BOOTZ
 
 #define CONFIG_CMDLINE_TAG		1	/* enable passing of ATAGs */
 #define CONFIG_SETUP_MEMORY_TAGS	1
@@ -117,31 +103,29 @@
 #define CONFIG_SYS_I2C_NOPROBES		{{0x0, 0x0}}
 
 /* USB */
-#define CONFIG_MUSB_UDC			1
-#define CONFIG_USB_OMAP3		1
+#define CONFIG_MUSB_GADGET
+#define CONFIG_USB_MUSB_OMAP2PLUS
+#define CONFIG_MUSB_PIO_ONLY
+#define CONFIG_USB_GADGET_DUALSPEED
 #define CONFIG_TWL4030_USB		1
-
-/* USB device configuration */
-#define CONFIG_USB_DEVICE		1
-#define CONFIG_USB_TTY			1
-#define CONFIG_SYS_CONSOLE_IS_IN_ENV	1
+#define CONFIG_USB_ETHER
+#define CONFIG_USB_ETHER_RNDIS
 
 /* USB EHCI */
 #define CONFIG_CMD_USB
 #define CONFIG_USB_EHCI
 
 #define CONFIG_USB_EHCI_OMAP
-/*#define CONFIG_EHCI_DCACHE*/ /* leave it disabled for now */
 #define CONFIG_OMAP_EHCI_PHY1_RESET_GPIO	147
-
-#define CONFIG_USB_ULPI
-#define CONFIG_USB_ULPI_VIEWPORT_OMAP
 
 #define CONFIG_SYS_USB_EHCI_MAX_ROOT_PORTS 3
 #define CONFIG_USB_HOST_ETHER
 #define CONFIG_USB_ETHER_SMSC95XX
 #define CONFIG_USB_ETHER_ASIX
 
+/* GPIO banks */
+#define CONFIG_OMAP3_GPIO_5		/* GPIO128..159 is in GPIO bank 5 */
+#define CONFIG_OMAP3_GPIO_6		/* GPIO160..191 is in GPIO bank 6 */
 
 /* commands to include */
 #include <config_cmd_default.h>
@@ -151,7 +135,7 @@
 #define CONFIG_CMD_CACHE
 #define CONFIG_CMD_EXT2		/* EXT2 Support			*/
 #define CONFIG_CMD_FAT		/* FAT support			*/
-#define CONFIG_CMD_JFFS2	/* JFFS2 Support		*/
+#define CONFIG_CMD_FS_GENERIC	/* Generic FS support */
 #define CONFIG_CMD_MTDPARTS	/* Enable MTD parts commands */
 #define CONFIG_MTD_DEVICE	/* needed for mtdparts commands */
 #define MTDIDS_DEFAULT			"nand0=nand"
@@ -177,13 +161,10 @@
 #undef CONFIG_CMD_IMLS		/* List all found images	*/
 
 #define CONFIG_SYS_NO_FLASH
-#define CONFIG_HARD_I2C			1
-#define CONFIG_SYS_I2C_SPEED		100000
-#define CONFIG_SYS_I2C_SLAVE		1
-#define CONFIG_SYS_I2C_BUS		0
-#define CONFIG_SYS_I2C_BUS_SELECT	1
-#define CONFIG_I2C_MULTI_BUS		1
-#define CONFIG_DRIVER_OMAP34XX_I2C	1
+#define CONFIG_SYS_I2C
+#define CONFIG_SYS_OMAP24_I2C_SPEED	100000
+#define CONFIG_SYS_OMAP24_I2C_SLAVE	1
+#define CONFIG_SYS_I2C_OMAP34XX
 #define CONFIG_VIDEO_OMAP3	/* DSS Support			*/
 
 /*
@@ -206,13 +187,6 @@
 
 #define CONFIG_SYS_MAX_NAND_DEVICE	1		/* Max number of NAND */
 							/* devices */
-#define CONFIG_JFFS2_NAND
-/* nand device jffs2 lives on */
-#define CONFIG_JFFS2_DEV		"nand0"
-/* start of jffs2 partition */
-#define CONFIG_JFFS2_PART_OFFSET	0x680000
-#define CONFIG_JFFS2_PART_SIZE		0xf980000	/* size of jffs2 */
-							/* partition */
 
 /* Environment information */
 #define CONFIG_BOOTDELAY		3
@@ -220,8 +194,13 @@
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"loadaddr=0x80200000\0" \
 	"rdaddr=0x81000000\0" \
+	"fdt_high=0xffffffff\0" \
+	"fdtaddr=0x80f80000\0" \
 	"usbtty=cdc_acm\0" \
-	"bootfile=uImage.beagle\0" \
+	"bootfile=uImage\0" \
+	"ramdisk=ramdisk.gz\0" \
+	"bootdir=/boot\0" \
+	"bootpart=0:2\0" \
 	"console=ttyO2,115200n8\0" \
 	"mpurate=auto\0" \
 	"buddy=none\0" \
@@ -257,6 +236,19 @@
 		"omapdss.def_disp=${defaultdisplay} " \
 		"root=${nandroot} " \
 		"rootfstype=${nandrootfstype}\0" \
+	"findfdt=" \
+		"if test $beaglerev = AxBx; then " \
+			"setenv fdtfile omap3-beagle.dtb; fi; " \
+		"if test $beaglerev = Cx; then " \
+			"setenv fdtfile omap3-beagle.dtb; fi; " \
+		"if test $beaglerev = C4; then " \
+			"setenv fdtfile omap3-beagle.dtb; fi; " \
+		"if test $beaglerev = xMAB; then " \
+			"setenv fdtfile omap3-beagle-xm.dtb; fi; " \
+		"if test $beaglerev = xMC; then " \
+			"setenv fdtfile omap3-beagle-xm.dtb; fi; " \
+		"if test $fdtfile = undefined; then " \
+			"echo WARNING: Could not determine device tree to use; fi; \0" \
 	"bootenv=uEnv.txt\0" \
 	"loadbootenv=fatload mmc ${mmcdev} ${loadaddr} ${bootenv}\0" \
 	"importbootenv=echo Importing environment from mmc ...; " \
@@ -270,12 +262,15 @@
 		"omapdss.def_disp=${defaultdisplay} " \
 		"root=${ramroot} " \
 		"rootfstype=${ramrootfstype}\0" \
-	"loadramdisk=fatload mmc ${mmcdev} ${rdaddr} ramdisk.gz\0" \
-	"loaduimagefat=fatload mmc ${mmcdev} ${loadaddr} uImage\0" \
-	"loaduimage=ext2load mmc ${mmcdev}:2 ${loadaddr} /boot/uImage\0" \
+	"loadramdisk=load mmc ${bootpart} ${rdaddr} ${bootdir}/${ramdisk}\0" \
+	"loadimage=load mmc ${bootpart} ${loadaddr} ${bootdir}/${bootfile}\0" \
+	"loadfdt=load mmc ${bootpart} ${fdtaddr} ${bootdir}/${fdtfile}\0" \
 	"mmcboot=echo Booting from mmc ...; " \
 		"run mmcargs; " \
 		"bootm ${loadaddr}\0" \
+	"mmcbootz=echo Booting with DT from mmc${mmcdev} ...; " \
+		"run mmcargs; " \
+		"bootz ${loadaddr} - ${fdtaddr}\0" \
 	"nandboot=echo Booting from nand ...; " \
 		"run nandargs; " \
 		"nand read ${loadaddr} 280000 400000; " \
@@ -287,9 +282,10 @@
 		"else run userbutton_nonxm; fi;\0" \
 	"userbutton_xm=gpio input 4;\0" \
 	"userbutton_nonxm=gpio input 7;\0"
-/* "run userbutton" will return 1 (false) if is pressed and 0 (false) if not */
+/* "run userbutton" will return 1 (false) if pressed and 0 (true) if not */
 #define CONFIG_BOOTCOMMAND \
-	"if mmc rescan ${mmcdev}; then " \
+	"run findfdt; " \
+	"mmc dev ${mmcdev}; if mmc rescan; then " \
 		"if run userbutton; then " \
 			"setenv bootenv uEnv.txt;" \
 		"else " \
@@ -304,11 +300,16 @@
 			"echo Running uenvcmd ...;" \
 			"run uenvcmd;" \
 		"fi;" \
-		"if run loaduimage; then " \
+		"if run loadimage; then " \
 			"run mmcboot;" \
 		"fi;" \
 	"fi;" \
 	"run nandboot;" \
+	"setenv bootfile zImage;" \
+	"if run loadimage; then " \
+		"run loadfdt;" \
+		"run mmcbootz; " \
+	"fi; " \
 
 #define CONFIG_AUTO_COMPLETE		1
 /*
@@ -341,7 +342,6 @@
  */
 #define CONFIG_SYS_TIMERBASE		(OMAP34XX_GPT2)
 #define CONFIG_SYS_PTV			2       /* Divisor: 2^(PTV+1) => 8 */
-#define CONFIG_SYS_HZ			1000
 
 /*-----------------------------------------------------------------------
  * Physical Memory Map
@@ -414,6 +414,9 @@
 #define CONFIG_SPL_FAT_SUPPORT
 #define CONFIG_SPL_SERIAL_SUPPORT
 #define CONFIG_SPL_NAND_SUPPORT
+#define CONFIG_SPL_NAND_BASE
+#define CONFIG_SPL_NAND_DRIVERS
+#define CONFIG_SPL_NAND_ECC
 #define CONFIG_SPL_GPIO_SUPPORT
 #define CONFIG_SPL_POWER_SUPPORT
 #define CONFIG_SPL_OMAP3_ID_NAND
@@ -430,6 +433,7 @@
 						10, 11, 12, 13}
 #define CONFIG_SYS_NAND_ECCSIZE		512
 #define CONFIG_SYS_NAND_ECCBYTES	3
+#define CONFIG_NAND_OMAP_ECCSCHEME	OMAP_ECC_HAM1_CODE_HW
 #define CONFIG_SYS_NAND_U_BOOT_START	CONFIG_SYS_TEXT_BASE
 #define CONFIG_SYS_NAND_U_BOOT_OFFS	0x80000
 

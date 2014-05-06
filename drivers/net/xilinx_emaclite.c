@@ -4,23 +4,7 @@
  *
  * Michal SIMEK <monstr@monstr.eu>
  *
- * See file CREDITS for list of people who contributed to this
- * project.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
- * MA 02111-1307 USA
+ * SPDX-License-Identifier:	GPL-2.0+
  */
 
 #include <common.h>
@@ -275,7 +259,8 @@ static int setup_phy(struct eth_device *dev)
 	}
 
 	/* interface - look at tsec */
-	phydev = phy_connect(emaclite->bus, emaclite->phyaddr, dev, 0);
+	phydev = phy_connect(emaclite->bus, emaclite->phyaddr, dev,
+			     PHY_INTERFACE_MODE_MII);
 	/*
 	 * Phy can support 1000baseT but device NOT that's why phydev->supported
 	 * must be setup for 1000baseT. phydev->advertising setups what speeds
@@ -287,6 +272,11 @@ static int setup_phy(struct eth_device *dev)
 	emaclite->phydev = phydev;
 	phy_config(phydev);
 	phy_startup(phydev);
+
+	if (!phydev->link) {
+		printf("%s: No link.\n", phydev->dev->name);
+		return 0;
+	}
 
 	/* Do not setup anything */
 	return 1;
@@ -343,11 +333,11 @@ static int emaclite_init(struct eth_device *dev, bd_t *bis)
 
 #if defined(CONFIG_MII) || defined(CONFIG_CMD_MII) || defined(CONFIG_PHYLIB)
 	/* Enable MII PHY */
-	/* Enable MII PHY */
 	out_be32((u32 *)(dev->iobase + XEL_MDIOCTRL_OFFSET), XEL_MDIOCTRL_MDIOEN_MASK);
 	temp = in_be32((u32 *)(dev->iobase + XEL_MDIOCTRL_OFFSET));
 	if (temp & XEL_MDIOCTRL_MDIOEN_MASK)
-		setup_phy(dev);
+		if (!setup_phy(dev))
+			return -1;
 #endif
 
 	debug("EmacLite Initialization complete\n");

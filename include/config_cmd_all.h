@@ -23,6 +23,7 @@
 #define CONFIG_CMD_BSP		/* Board Specific functions	*/
 #define CONFIG_CMD_CACHE	/* icache, dcache		*/
 #define CONFIG_CMD_CDP		/* Cisco Discovery Protocol	*/
+#define CONFIG_CMD_CLK		/* Clock support		*/
 #define CONFIG_CMD_CONSOLE	/* coninfo			*/
 #define CONFIG_CMD_DATE		/* support for RTC, date/time...*/
 #define CONFIG_CMD_DHCP		/* DHCP Support			*/
@@ -40,12 +41,16 @@
 #define CONFIG_CMD_FDOS		/* Floppy DOS support		*/
 #define CONFIG_CMD_FLASH	/* flinfo, erase, protect	*/
 #define CONFIG_CMD_FPGA		/* FPGA configuration Support	*/
+#define CONFIG_CMD_FUSE		/* Device fuse support		*/
+#define CONFIG_CMD_GETTIME	/* Get time since boot         */
+#define CONFIG_CMD_HASH		/* calculate hash / digest	*/
 #define CONFIG_CMD_HWFLOW	/* RTS/CTS hw flow control	*/
 #define CONFIG_CMD_I2C		/* I2C serial bus support	*/
 #define CONFIG_CMD_IDE		/* IDE harddisk support		*/
 #define CONFIG_CMD_IMI		/* iminfo			*/
 #define CONFIG_CMD_IMLS		/* List all found images	*/
 #define CONFIG_CMD_IMMAP	/* IMMR dump support		*/
+#define CONFIG_CMD_IO		/* Access to X86 IO space	*/
 #define CONFIG_CMD_IRQ		/* irqinfo			*/
 #define CONFIG_CMD_ITEST	/* Integer (and string) test	*/
 #define CONFIG_CMD_JFFS2	/* JFFS2 Support		*/
@@ -53,7 +58,9 @@
 #define CONFIG_CMD_LICENSE	/* console license display	*/
 #define CONFIG_CMD_LOADB	/* loadb			*/
 #define CONFIG_CMD_LOADS	/* loads			*/
-#define CONFIG_CMD_MEMORY	/* md mm nm mw cp cmp crc base loop mtest */
+#define CONFIG_CMD_MEMINFO	/* meminfo			*/
+#define CONFIG_CMD_MEMORY	/* md mm nm mw cp cmp crc base loop */
+#define CONFIG_CMD_MEMTEST	/* mtest			*/
 #define CONFIG_CMD_MFSL		/* FSL support for Microblaze	*/
 #define CONFIG_CMD_MII		/* MII support			*/
 #define CONFIG_CMD_MISC		/* Misc functions like sleep etc*/
@@ -70,8 +77,9 @@
 #define CONFIG_CMD_REGINFO	/* Register dump		*/
 #define CONFIG_CMD_REISER	/* Reiserfs support		*/
 #define CONFIG_CMD_RARP		/* rarpboot support		*/
-#define CONFIG_CMD_ROMFS	/* ROMFS support		*/
+#define CONFIG_CMD_READ		/* Read data from partition	*/
 #define CONFIG_CMD_RUN		/* run command in env variable	*/
+#define CONFIG_CMD_SANDBOX	/* sb command to access sandbox features */
 #define CONFIG_CMD_SAVEENV	/* saveenv			*/
 #define CONFIG_CMD_SAVES	/* save S record dump		*/
 #define CONFIG_CMD_SCSI		/* SCSI Support			*/
@@ -89,5 +97,7 @@
 #define CONFIG_CMD_USB		/* USB Support			*/
 #define CONFIG_CMD_XIMG		/* Load part of Multi Image	*/
 #define CONFIG_CMD_ZFS		/* ZFS Support			*/
+#define CONFIG_CMD_ZYNQ_AES	/* AES support for Zynq		*/
+#define CONFIG_CMD_ZYNQ_RSA	/* RSA-AES support for Zynq	*/
 
 #endif	/* _CONFIG_CMD_ALL_H */
