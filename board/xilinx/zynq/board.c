@@ -27,23 +27,10 @@ Xilinx_desc fpga045 = XILINX_XC7Z045_DESC(0x45);
 Xilinx_desc fpga100 = XILINX_XC7Z100_DESC(0x100);
 #endif
 
-#if 0
-extern int i2c_write(unsigned char chip, unsigned int addr, int alen, unsigned char *buffer, int len);
-
-static inline void i2c_reg_write(unsigned char addr, int alen, unsigned char reg, unsigned char val)
-{
-	int rc;
-
-	rc=i2c_write(addr, reg, alen, &val, 1);
-
-}
-#endif
-
 int board_init(void)
 {
 #ifndef CONFIG_SPL_BUILD
-  //A.O: Note! Current voltages only good for Gen0, need to modify code
-  //to incorporate Gen1 power changes.
+  // FH- Modified notes for Gen1 values
 
   //R.T. ISL9305H I2C programming
   // 1. DCD1 set to 1.0V (Epiphany)
@@ -52,19 +39,19 @@ int board_init(void)
   i2c_reg_write(CONFIG_SYS_I2C_ADDR, 0x0, 0x07);
 
   //2. DCD2 set to 1.35V (DDR3L)
-  //i2cset 0 0x68 0x01 0x27
+  //i2cset 0 0x68 0x01 0x15
 	
-  i2c_reg_write(CONFIG_SYS_I2C_ADDR, 0x1, 0x27);
+  i2c_reg_write(CONFIG_SYS_I2C_ADDR, 0x1, 0x15);
 
   //3. LD01 set to 3.3V (PEC_POWER)
-  // i2cset 0 0x68 0x02 0x20
+  // i2cset 0 0x68 0x02 0x30
 
-  i2c_reg_write(CONFIG_SYS_I2C_ADDR, 0x2 ,0x20);
+  i2c_reg_write(CONFIG_SYS_I2C_ADDR, 0x2 ,0x30);
 
   // 4. LD02 set to 2.5V (HDMI_GPIO)
-  // i2cset 0 0x68 0x03 0x12
+  // i2cset 0 0x68 0x03 0x20
 
-  i2c_reg_write(CONFIG_SYS_I2C_ADDR, 0x3, 0x12);
+  i2c_reg_write(CONFIG_SYS_I2C_ADDR, 0x3, 0x20);
 
   // 5. Enable the change by writing to SYS_PARAMETER
   // i2cset 0 0x68 0x05 0x6f
@@ -74,20 +61,6 @@ int board_init(void)
   udelay (50000);
 
 #endif 
-  //	To turn on LED/un-reset Ethernet PHY:
-  //	----------------------------------------------------
-  //	Turn GPIO[7] to output
-  //	Enable GPIO[7]
-  //	Set mask/data to make GPIO[7] HIGH
-  
-  //A.O.-->No longer needed, power issue fixed, remove code later
-
-  //A.0-->cut
-  //XIo_Out32(0xe000a204, 0x80);
-  //XIo_Out32(0xe000a208, 0x80);
-  //XIo_Out32(0xe000a000, 0xff7f0080);
-  
-  //A.0-->end cut
 
 #if defined(CONFIG_ENV_IS_IN_EEPROM) && !defined(CONFIG_SPL_BUILD)
 	unsigned char eepromsel = CONFIG_SYS_I2C_MUX_EEPROM_SEL;
