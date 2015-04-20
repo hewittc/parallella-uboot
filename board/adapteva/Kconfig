@@ -1,0 +1,15 @@
+if TARGET_ADAPTEVA_PARALLELLA
+
+config SYS_BOARD
+	default "parallella"
+
+config SYS_VENDOR
+	default "adapteva"
+
+config SYS_SOC
+	default "zynq"
+
+config SYS_CONFIG_NAME
+	default "adapteva_parallella"
+
+endif

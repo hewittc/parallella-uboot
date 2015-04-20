@@ -1,0 +1,8 @@
+# We need I2C to configure the PMIC. I2C is hooked up via EMIO so we need to
+# have the PL initialized *before* U-BOOT is started. So no SPL for us :(
+CONFIG_SPL=n
+CONFIG_ARM=y
+CONFIG_ZYNQ=y
+CONFIG_TARGET_ADAPTEVA_PARALLELLA=y
+CONFIG_OF_CONTROL=n
+CONFIG_DEFAULT_DEVICE_TREE="zynq-parallella"
