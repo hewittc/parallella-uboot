@@ -21,7 +21,12 @@ config TARGET_ZYNQ_ZC770
 config TARGET_ZYNQ_ZYBO
 	bool "Zynq Zybo Board"
 
+config TARGET_ADAPTEVA_PARALLELLA
+	bool "Adapteva Parallella Board"
+
 endchoice
+
+source "board/adapteva/Kconfig"
 
 config SYS_BOARD
 	default "zynq"
