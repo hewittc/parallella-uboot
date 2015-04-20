@@ -89,7 +89,7 @@ int board_init(void)
 	return 0;
 }
 
-int board_late_init(void)
+__weak int board_late_init(void)
 {
 	switch ((zynq_slcr_get_boot_mode()) & ZYNQ_BM_MASK) {
 	case ZYNQ_BM_QSPI:
@@ -116,7 +116,7 @@ int board_late_init(void)
 }
 
 #ifdef CONFIG_DISPLAY_BOARDINFO
-int checkboard(void)
+__weak int checkboard(void)
 {
 	u32 version = zynq_get_silicon_version();
 
