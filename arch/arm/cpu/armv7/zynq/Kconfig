@@ -24,7 +24,12 @@ config TARGET_ZYNQ_AFX
 config TARGET_ZYNQ_CSE
 	bool "Zynq CSE Board"
 
+config TARGET_ADAPTEVA_PARALLELLA
+	bool "Adapteva Parallella Board"
+
 endchoice
+
+source "board/adapteva/Kconfig"
 
 config SYS_BOARD
 	default "zynq"

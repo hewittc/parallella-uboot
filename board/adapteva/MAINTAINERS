@@ -1,0 +1,6 @@
+Adapteva boards
+M:	Ola Jeppsson <ola@adapteva.com>
+S:	Maintained
+F:	board/adapteva/
+F:	include/configs/adapteva_*.h
+F:	configs/adapteva_*_defconfig
