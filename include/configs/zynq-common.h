@@ -204,6 +204,7 @@
 #endif
 
 /* Default environment */
+#ifndef CONFIG_EXTRA_ENV_SETTINGS
 #define CONFIG_EXTRA_ENV_SETTINGS	\
 	"fit_image=fit.itb\0"		\
 	"load_addr=0x2000000\0"		\
@@ -227,9 +228,12 @@
 			"bootm ${load_addr}\0" \
 		"fi\0" \
 		DFU_ALT_INFO
+#endif /* ifndef CONFIG_EXTRA_ENV_SETTINGS */
 
 #define CONFIG_BOOTCOMMAND		"run $modeboot"
+#ifndef CONFIG_BOOTDELAY
 #define CONFIG_BOOTDELAY		3 /* -1 to Disable autoboot */
+#endif
 #define CONFIG_SYS_LOAD_ADDR		0 /* default? */
 
 /* Miscellaneous configurable options */
@@ -314,7 +318,7 @@
 #define CONFIG_SPL_LDSCRIPT	"arch/arm/mach-zynq/u-boot-spl.lds"
 
 /* MMC support */
-#ifdef CONFIG_ZYNQ_SDHCI0
+#ifdef CONFIG_ZYNQ_SDHCI
 #define CONFIG_SPL_MMC_SUPPORT
 #define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR 0x300 /* address 0x60000 */
 #define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS      0x200 /* 256 KB */
