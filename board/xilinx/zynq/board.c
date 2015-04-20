@@ -26,7 +26,7 @@ int board_init(void)
 	return 0;
 }
 
-int board_late_init(void)
+__weak int board_late_init(void)
 {
 	int env_targets_len = 0;
 	const char *mode;
