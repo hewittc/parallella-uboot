@@ -1,0 +1,22 @@
+if ARCH_ZYNQ
+
+config TARGET_ADAPTEVA_PARALLELLA
+        bool "Support Adapteva Parallella"
+        default n
+        help
+          Enable extra board initialization code to
+          support Adapteva Parallella boards.
+
+config SYS_BOARD
+	default "parallella"
+
+config SYS_VENDOR
+	default "adapteva"
+
+config SYS_SOC
+	default "zynq"
+
+config SYS_CONFIG_NAME
+	default "adapteva_parallella"
+
+endif

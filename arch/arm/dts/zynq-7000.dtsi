@@ -1,10 +1,14 @@
 /*
- * Xilinx Zynq 7000 DTSI
- * Describes the hardware common to all Zynq 7000-based boards.
+ *  Copyright (C) 2011 - 2014 Xilinx
  *
- *  Copyright (C) 2011 - 2015 Xilinx
+ * This software is licensed under the terms of the GNU General Public
+ * License version 2, as published by the Free Software Foundation, and
+ * may be copied, distributed, and modified under those terms.
  *
- * SPDX-License-Identifier:	GPL-2.0+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 / {
@@ -50,8 +54,7 @@
 		compatible = "arm,cortex-a9-pmu";
 		interrupts = <0 5 4>, <0 6 4>;
 		interrupt-parent = <&intc>;
-		reg = <0xf8891000 0x1000>,
-		      <0xf8893000 0x1000>;
+		reg = < 0xf8891000 0x1000 0xf8893000 0x1000 >;
 	};
 
 	regulator_vccpint: fixedregulator {
@@ -278,6 +281,7 @@
 			interrupt-parent = <&intc>;
 			interrupts = <0 24 4>;
 			reg = <0xe0100000 0x1000>;
+			broken-adma2;
 		};
 
 		sdhci1: sdhci@e0101000 {
@@ -288,6 +292,7 @@
 			interrupt-parent = <&intc>;
 			interrupts = <0 47 4>;
 			reg = <0xe0101000 0x1000>;
+			broken-adma2;
 		};
 
 		slcr: slcr@f8000000 {
@@ -369,6 +374,7 @@
 			interrupts = <1 11 0x301>;
 			interrupt-parent = <&intc>;
 			clocks = <&clkc 4>;
+			tied-to-cpu-freq;
 		};
 
 		ttc0: timer@f8001000 {
@@ -423,5 +429,12 @@
 			reg = <0xf8005000 0x1000>;
 			timeout-sec = <10>;
 		};
+	};
+
+	fpga: fpga {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
 	};
 };

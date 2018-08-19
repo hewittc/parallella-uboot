@@ -1228,6 +1228,7 @@ source "arch/arm/cpu/armv8/Kconfig"
 
 source "arch/arm/mach-imx/Kconfig"
 
+source "board/adapteva/parallella/Kconfig"
 source "board/aries/m28evk/Kconfig"
 source "board/bosch/shc/Kconfig"
 source "board/CarMediaLab/flea3/Kconfig"

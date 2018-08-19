@@ -17,6 +17,7 @@ DECLARE_GLOBAL_DATA_PTR;
 
 #define ISL9305_I2C_ADDR 0x68 /* PMIC */
 
+#if 0
 void green_led_on(void)
 {
 	writel(0xff7f0080, 0xe000a000);
@@ -68,6 +69,7 @@ static inline void green_led_blink(int n)
 {
 	led_blink(STATUS_LED_BIT, n);
 }
+#endif
 
 static inline int isl9305_probe(void)
 {
@@ -115,24 +117,32 @@ int board_late_init(void)
 	const fpga_desc *desc;
 	xilinx_desc *desc_xilinx;
 
+#if 0
 	green_led_blink(1);
+#endif
 
 	desc = fpga_get_desc(0);
 	if (!desc) {
+#if 0
 		green_led_off();
+#endif
 		panic("board_late_init: No FPGA found.\n");
 	}
 
 	desc_xilinx = desc->devdesc;
 	if (!desc_xilinx || desc_xilinx->family != xilinx_zynq ||
 	    !desc_xilinx->name) {
+#if 0
 		green_led_off();
+#endif
 		panic("board_late_init: Unsupported FPGA found.\n");
 	}
 
+#if 0
 	green_led_blink(4);
+#endif
 
-	setenv("fpga_model", desc_xilinx->name);
+	env_set("fpga_model", desc_xilinx->name);
 
 	return 0;
 }
