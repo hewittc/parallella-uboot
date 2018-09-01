@@ -35,6 +35,11 @@
 	};
 };
 
+&clkc {
+	fclk-enable = <0x3>;
+	ps-clk-frequency = <33333333>;
+};
+
 &usb_phy1 {
 	status = "okay";
 };
