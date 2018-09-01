@@ -31,20 +31,20 @@
 	"loadbootenv_addr=0x2000000\0" \
 	"loadbootenv=load mmc 0 ${loadbootenv_addr} ${bootenv}\0" \
 	"slowblink=" \
-		"led 0 toggle && sleep 1 && led 0 toggle && sleep 1 || true\0" \
+		"led parallella:cr10:usr on && sleep 1 && led parallella:cr10:usr off && sleep 1 || true\0" \
 	"importbootenv=echo Importing environment from SD ...; " \
 		"env import -t ${loadbootenv_addr} $filesize\0" \
 	"importbootenvtftp=echo Importing environment from TFTP ...; " \
 		"env import -t ${loadbootenv_addr} $filesize\0" \
 	"preboot=if mmcinfo; then " \
-			"led 0 on; " \
+			"led parallella:cr10:usr on; " \
 			"run slowblink; " \
 			"env set modeboot sdboot_old; " \
 			"run loadbootenv && " \
 			"run importbootenv && " \
 			"env set modeboot sdboot; " \
 		"else " \
-			"led 0 off; " \
+			"led parallella:cr10:usr off; " \
 			"env set modeboot tftpboot; " \
 		"fi; \0" \
 	"sdboot_old=" \
@@ -56,7 +56,7 @@
 		"load mmc 0 0x2A00000 ${old_devicetree_image} && " \
 		"run slowblink && " \
 		"bootm 0x3000000 - 0x2A00000; " \
-		"led 0 off\0" \
+		"led parallella:cr10:usr off\0" \
 	"tftpboot=while true; do " \
 			"echo TFTPing second stage boot script... && " \
 			"tftpboot ${loadbootenv_addr} ${bootenv} && " \
