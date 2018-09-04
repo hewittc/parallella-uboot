@@ -45,8 +45,8 @@ int power_init_board(void)
 	/* 3. LD01 set to 3.3V (PEC_POWER) */
 	isl9305_write(0x2, 0x30);
 
-	/* 4. LD02 set to 2.9V (HDMI_GPIO) */
-	isl9305_write(0x3, 0x28);
+	/* 4. LD02 set to 3.3V (HDMI_GPIO) */
+	isl9305_write(0x3, 0x30);
 
 	/* 5. Enable the change by writing to SYS_PARAMETER */
 	isl9305_write(0x5, 0x6f);
