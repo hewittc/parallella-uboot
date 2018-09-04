@@ -17,60 +17,6 @@ DECLARE_GLOBAL_DATA_PTR;
 
 #define ISL9305_I2C_ADDR 0x68 /* PMIC */
 
-#if 0
-void green_led_on(void)
-{
-	writel(0xff7f0080, 0xe000a000);
-}
-
-void green_led_off(void)
-{
-	/* Clear mask/data to make GPIO[7] LOW */
-	writel(0xff7f0000, 0xe000a000);
-}
-
-void __led_toggle(led_id_t mask)
-{
-	bool toggled = readl(0xe000a040) & 0x00000080;
-
-	if (toggled)
-		green_led_off();
-	else
-		green_led_on();
-}
-
-void __led_set(led_id_t mask, int state)
-{
-	if (state == STATUS_LED_OFF)
-		green_led_off();
-	else
-		green_led_on();
-}
-
-void __led_init(led_id_t mask, int state)
-{
-	/* 1. Turn GPIO[7] to output
-	 * 2. Enable GPIO[7] */
-	writel(0x00000080, 0xe000a204);
-	writel(0x00000080, 0xe000a208);
-
-	__led_set(mask, state);
-}
-
-static inline void led_blink(led_id_t mask, int n)
-{
-	for  (n = n * 2; n > 0; n--) {
-		udelay(75000);
-		__led_toggle(mask);
-	}
-}
-
-static inline void green_led_blink(int n)
-{
-	led_blink(STATUS_LED_BIT, n);
-}
-#endif
-
 static inline int isl9305_probe(void)
 {
 	return i2c_probe(ISL9305_I2C_ADDR);
