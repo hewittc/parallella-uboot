@@ -246,6 +246,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
 	zynq-dlc20-rev1.0.dtb \
 	zynq-microzed.dtb \
 	zynq-minized.dtb \
+	zynq-parallella.dtb \
 	zynq-picozed.dtb \
 	zynq-syzygy-hub.dtb \
 	zynq-topic-miami.dtb \
