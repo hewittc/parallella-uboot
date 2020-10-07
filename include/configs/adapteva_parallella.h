@@ -11,33 +11,24 @@
 #ifndef __CONFIG_ADAPTEVA_PARALLELLA_H
 #define __CONFIG_ADAPTEVA_PARALLELLA_H
 
-#define CONFIG_SYS_SDRAM_SIZE		(1024 * 1024 * 1024)
-#define CONFIG_SYS_MEM_TOP_HIDE		0x02000000
+#ifndef CONFIG_BOOTDELAY
+#define CONFIG_BOOTDELAY		1
+#endif
 
-#define CONFIG_ZYNQ_SERIAL_UART1
-
-#define CONFIG_ZYNQ_SDHCI1
-
-#define CONFIG_ZYNQ_QSPI
-
-#define CONFIG_ZYNQ_GEM0
-#define CONFIG_ZYNQ_GEM_PHY_ADDR0	0
-
-#define CONFIG_ZYNQ_BOOT_FREEBSD
-
-#define CONFIG_BOARD_LATE_INIT
-
-#define CONFIG_CMD_MEMTEST
-#define CONFIG_CMD_SETEXPR
-
-#define CONFIG_SYS_NO_FLASH
-#define CONFIG_ZYNQ_QSPI
+#ifndef CONFIG_ENV_OFFSET
 #define CONFIG_ENV_OFFSET		0x004E0000
+#endif
 
+#ifndef CONFIG_ENV_SIZE
+#define CONFIG_ENV_SIZE			0x20000
+#endif
 
-#define CONFIG_BOOTDELAY 1
+#ifndef CONFIG_BOOTDELAY
+#define CONFIG_BOOTDELAY		1
+#endif
 
-#define CONFIG_PREBOOT
+#define CONFIG_SYS_I2C_SPEED		100000
+
 #define CONFIG_EXTRA_ENV_SETTINGS	\
 	"ethaddr=04:4f:8b:00:00:00\0"   \
 	"ipaddr=10.11.12.13\0" \
@@ -50,20 +41,20 @@
 	"loadbootenv_addr=0x2000000\0" \
 	"loadbootenv=load mmc 0 ${loadbootenv_addr} ${bootenv}\0" \
 	"slowblink=" \
-		"led 0 toggle && sleep 1 && led 0 toggle && sleep 1 || true\0" \
+		"led parallella:cr10:usr on && sleep 1 && led parallella:cr10:usr off && sleep 1 || true\0" \
 	"importbootenv=echo Importing environment from SD ...; " \
 		"env import -t ${loadbootenv_addr} $filesize\0" \
 	"importbootenvtftp=echo Importing environment from TFTP ...; " \
 		"env import -t ${loadbootenv_addr} $filesize\0" \
 	"preboot=if mmcinfo; then " \
-			"led 0 on; " \
+			"led parallella:cr10:usr on; " \
 			"run slowblink; " \
 			"env set modeboot sdboot_old; " \
 			"run loadbootenv && " \
 			"run importbootenv && " \
 			"env set modeboot sdboot; " \
 		"else " \
-			"led 0 off; " \
+			"led parallella:cr10:usr off; " \
 			"env set modeboot tftpboot; " \
 		"fi; \0" \
 	"sdboot_old=" \
@@ -75,7 +66,7 @@
 		"load mmc 0 0x2A00000 ${old_devicetree_image} && " \
 		"run slowblink && " \
 		"bootm 0x3000000 - 0x2A00000; " \
-		"led 0 off\0" \
+		"led parallella:cr10:usr off\0" \
 	"tftpboot=while true; do " \
 			"echo TFTPing second stage boot script... && " \
 			"tftpboot ${loadbootenv_addr} ${bootenv} && " \
@@ -83,18 +74,6 @@
 			"run tftpboot_stage2; " \
 		"done\0"
 
-
 #include <configs/zynq-common.h>
-
-
-/* LEDS */
-#define CONFIG_CMD_LED
-#define CONFIG_BOARD_SPECIFIC_LED
-#define CONFIG_STATUS_LED
-#define STATUS_LED_BIT			0
-#define STATUS_LED_STATE		STATUS_LED_OFF
-#define STATUS_LED_PERIOD		(CONFIG_SYS_HZ / 5) /* 5 Hz */
-#define STATUS_LED_BOOT			0
-
 
 #endif /* __CONFIG_ADAPTEVA_PARALLELLA_H */
