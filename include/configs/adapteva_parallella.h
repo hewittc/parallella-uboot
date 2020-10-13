@@ -11,22 +11,6 @@
 #ifndef __CONFIG_ADAPTEVA_PARALLELLA_H
 #define __CONFIG_ADAPTEVA_PARALLELLA_H
 
-#ifndef CONFIG_BOOTDELAY
-#define CONFIG_BOOTDELAY		1
-#endif
-
-#ifndef CONFIG_ENV_OFFSET
-#define CONFIG_ENV_OFFSET		0x004E0000
-#endif
-
-#ifndef CONFIG_ENV_SIZE
-#define CONFIG_ENV_SIZE			0x20000
-#endif
-
-#ifndef CONFIG_BOOTDELAY
-#define CONFIG_BOOTDELAY		1
-#endif
-
 #define CONFIG_SYS_I2C_SPEED		100000
 
 #include <configs/zynq-common.h>
